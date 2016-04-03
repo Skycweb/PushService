@@ -2,7 +2,9 @@
 #include "../include/lzz_Thread.h"
 #include "../include/lzz_SocketInterface.h"
 #include "../include/lzz_ClientList.h"
-
+#include "../include/lzz_Factory.h"
+#include "lzz_Heartbeat.h"
+#include "lzz_Push.h"
 class lzz_RecvThread: public lzz_Thread
 {
 private:

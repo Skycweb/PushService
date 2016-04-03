@@ -52,7 +52,7 @@ void lzz_TcpRecvAction::run()
 		SOCKADDR padd_sockaddr;
 		lzz_Factory* f = lzz_nullptr;
 		char* p_str = lzz_nullptr;
-		ActionType type = ActionTypeNone;
+		ActionType type = ActionType::None;
 		if (interface_sk->TcpRecv(&type, 4) && interface_sk->TcpRecv(&DataLen,4) && DataLen != 0)
 		{
 			char backData[1] = { 1 };
@@ -62,7 +62,7 @@ void lzz_TcpRecvAction::run()
 			{
 				switch (type)
 				{
-				case PushAction: //添加推送
+				case _ActionType::PushAction: //添加推送
 					f = new lzz_Push();
 					break;
 				default: break;

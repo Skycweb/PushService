@@ -1,8 +1,5 @@
 ﻿#include "lzz_RecvThread.h"
-#include "../include/lzz_ClientList.h"
-#include "../include/lzz_Factory.h"
-#include "lzz_Heartbeat.h"
-#include "lzz_Push.h"
+
 
 
 lzz_RecvThread::lzz_RecvThread(lzz_SocketInterface* s,lzz_ClientList *l)
@@ -34,10 +31,10 @@ void lzz_RecvThread::run()
 		DataLen = *reinterpret_cast<int*>(&pRecvData[4]);
 		switch (type)
 		{
-		case Heartbeat: //心跳包
+		case ActionType::Heartbeat: //心跳包
 			f = new lzz_Heartbeat();
 			break;
-		case PushAction: //添加好友推送
+		case ActionType::PushAction: //添加好友推送
 			f = new lzz_Push();
 			break;
 		default: break;

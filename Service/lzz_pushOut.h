@@ -1,6 +1,6 @@
 #pragma once
-#include "../../push/Service/lzz_Push.h"
-#include "../../push/include/lzz_Thread.h"
+#include "../Service/lzz_Push.h"
+#include "../include/lzz_Thread.h"
 
 
 class lzz_pushOut :

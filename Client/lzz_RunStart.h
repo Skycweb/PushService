@@ -1,7 +1,8 @@
 #pragma once
 #include "lzz_ClientSocket.h"
 #include "../include/lzz_Thread.h"
-
+#include "../include/lzz_Factory.h"
+#include "lzz_push.h"
 class lzz_RunStart :
 	public lzz_Thread
 {

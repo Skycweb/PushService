@@ -8,7 +8,7 @@ private:
 	SOCKET sk = 0;
 	WSADATA wsa;
 	SOCKADDR_IN serverAddr;
-	int serverAddr_len = sizeof(serverAddr);
+	int serverAddr_len = sizeof(SOCKADDR_IN);
 	/*
 	类被删除的时候WSAStartup是否释放
 	*/

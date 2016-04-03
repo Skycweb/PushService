@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../../push/include/base.h"
+#include "../include/base.h"
 
 
 struct lzz_Push_Modle

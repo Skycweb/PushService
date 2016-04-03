@@ -28,7 +28,7 @@ void lzz_HeartbeatThread::run()
 	is_close_b_ = &run;
 	while(run)
 	{
-		sk->UdpSend(&guid_id, 16, Heartbeat);
+		sk->UdpSend(&guid_id, 16, ActionType::Heartbeat);
 		//lzz_out << "我发起了心跳包:" << lzz_endline;
 		Sleep(1000*10);
 	}

@@ -44,7 +44,7 @@ void lzz_pushOut::run()
 					lzz_UserModle* u = cl->GetClient((*modle).UserId);
 					if (u != lzz_nullptr)
 					{
-						sk->UdpSend(&(modle->ActionId), 16, PushAction, u->getAddr());
+						sk->UdpSend(&(modle->ActionId), 16, ActionType::PushAction, u->getAddr());
 					}
 			}
 		}

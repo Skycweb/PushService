@@ -1,6 +1,6 @@
 #include "lzz_RunStart.h"
-#include "../include/lzz_Factory.h"
-#include "../../Client/lzz_Push.h"
+
+
 
 
 lzz_RunStart::lzz_RunStart()
@@ -34,8 +34,8 @@ void lzz_RunStart::run()
 		DataLen = *reinterpret_cast<int*>(&pRecvData[4]);
 		switch (type)
 		{
-		case Heartbeat: break;
-		case PushAction: 
+		case _ActionType::Heartbeat: break;
+		case _ActionType::PushAction: 
 			f = new lzz_Push();
 			break;
 		default: break;

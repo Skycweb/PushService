@@ -98,7 +98,7 @@ void lzz_Push::onLoad()
 	GUID guid;
 	lzz_Memcpy(&guid, request, sizeof(GUID));
 	pushType pt = *reinterpret_cast<pushType*>(&request[16]);
-	if (pt == Add)
+	if (pt == pushType::Add)
 	{
 		
 		int len = 0;
@@ -113,7 +113,7 @@ void lzz_Push::onLoad()
 			sk->TcpSend(new char[1]{ 1 }, 1);
 		}
 	}
-	else if (pt == Delete)
+	else if (pt == pushType::Delete)
 	{
 		DeleteModle(guid,sk);
 	}

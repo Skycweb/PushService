@@ -48,6 +48,9 @@
     <ClInclude Include="..\..\Client\lzz_UdpRecv.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Client\lzz_push.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\include\lzz_base.cpp">
@@ -83,7 +86,7 @@
     <ClCompile Include="..\..\Client\lzz_UdpRecv.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Client\main.cpp">
+    <ClCompile Include="..\..\Client\lzz_Push.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

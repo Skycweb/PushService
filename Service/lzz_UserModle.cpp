@@ -1,14 +1,25 @@
 #include "lzz_UserModle.h"
-#include "../include/base.h"
 
 
 lzz_UserModle::lzz_UserModle()
 {
+	clientType = lzz_ClientType::None;
+}
+
+lzz_UserModle::lzz_UserModle(lzz_ClientType* ct, SOCKADDR* userAddress)
+{
+	clientType = *ct;
+	addr = *userAddress;
 }
 
 void lzz_UserModle::setAddr(SOCKADDR* v_sockaddr)
 {
-	lzz_Memcpy(&(this->addr), v_sockaddr, sizeof(SOCKADDR));
+	addr = *v_sockaddr;
+}
+
+void lzz_UserModle::setClientType(lzz_ClientType* ct)
+{
+	clientType = *ct;
 }
 
 SOCKADDR* lzz_UserModle::getAddr()
@@ -18,4 +29,5 @@ SOCKADDR* lzz_UserModle::getAddr()
 
 lzz_UserModle::~lzz_UserModle()
 {
+
 }

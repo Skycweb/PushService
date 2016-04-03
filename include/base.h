@@ -1,4 +1,7 @@
 #pragma once
+
+#ifndef base_H
+#define base_H
 #include <stdio.h>
 #include <iostream>
 #include <objbase.h>
@@ -6,7 +9,6 @@
 #pragma comment(lib,"ws2_32.lib")
 //#define lzzgcc // gcc开关
 #define waiwang
-
 
 #ifndef lzz_ServiceTcpIp
 #ifdef  waiwang
@@ -92,18 +94,18 @@
 
 #ifndef lzz_nullptr
 #ifndef lzzgcc
-	#define lzz_nullptr nullptr
+#define lzz_nullptr nullptr
 #else
-	#define lzz_nullptr NULL
+#define lzz_nullptr NULL
 #endif
 #endif
 
 #ifndef lzz_sleep
 #ifndef  lzzgcc
-	#define lzz_sleep(s) ::Sleep((s))
+#define lzz_sleep(s) ::Sleep((s))
 #else
-	#include <unistd.h>
-	#define lzz_sleep(s) usleep((s));
+#include <unistd.h>
+#define lzz_sleep(s) usleep((s));
 #endif
 #endif
 
@@ -112,21 +114,28 @@ void lzz_STR_2_GUID(wchar_t* cstr, GUID *stGuid);
 
 
 
-
-//访问类型
-enum ActionType
-{
-	ActionTypeNone = 0,
-	Heartbeat = 1,
-	PushAction = 2 //推送
-};
-
+namespace _ActionType {
+	//访问类型
+	enum ActionType_
+	{
+		None = 0,
+		Heartbeat = 1,
+		PushAction = 2 //推送
+	};
+}
+typedef _ActionType::ActionType_ ActionType;
 /*
 推送类型
 */
-enum pushType
+namespace _pushType
 {
-	None = 0,
-	Add = 1,//添加好友推送
-	Delete = 2//删除好友推送
-};
+	enum _pushType
+	{
+		None = 0,
+		Add = 1,//添加好友推送
+		Delete = 2//删除好友推送
+	};
+}
+typedef _pushType::_pushType pushType;
+
+#endif
