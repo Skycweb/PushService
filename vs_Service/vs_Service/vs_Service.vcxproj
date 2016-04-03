@@ -21,14 +21,14 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E4CC1FF7-E92C-42C0-AACA-6597B66B7853}</ProjectGuid>
     <RootNamespace>vs_Service</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -73,7 +73,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -125,6 +125,7 @@
     <ClCompile Include="..\..\include\lzz_SocketInterface.cpp" />
     <ClCompile Include="..\..\include\lzz_Thread.cpp" />
     <ClCompile Include="..\..\Service\lzz_Heartbeat.cpp" />
+    <ClCompile Include="..\..\Service\lzz_iocp.cpp" />
     <ClCompile Include="..\..\Service\lzz_Push.cpp" />
     <ClCompile Include="..\..\Service\lzz_pushOut.cpp" />
     <ClCompile Include="..\..\Service\lzz_Push_Modle.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="..\..\include\lzz_SocketInterface.h" />
     <ClInclude Include="..\..\include\lzz_Thread.h" />
     <ClInclude Include="..\..\Service\lzz_Heartbeat.h" />
+    <ClInclude Include="..\..\Service\lzz_iocp.h" />
     <ClInclude Include="..\..\Service\lzz_Push.h" />
     <ClInclude Include="..\..\Service\lzz_pushOut.h" />
     <ClInclude Include="..\..\Service\lzz_Push_Modle.h" />

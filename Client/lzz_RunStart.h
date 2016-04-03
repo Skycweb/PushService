@@ -1,4 +1,5 @@
 #pragma once
+#include "../include/base.h"
 #include "lzz_ClientSocket.h"
 #include "../include/lzz_Thread.h"
 #include "../include/lzz_Factory.h"

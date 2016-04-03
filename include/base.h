@@ -6,15 +6,15 @@
 #include <iostream>
 #include <objbase.h>
 #include <process.h>
-#pragma comment(lib,"ws2_32.lib")
+
 //#define lzzgcc // gcc开关
-#define waiwang
+//#define waiwang
 
 #ifndef lzz_ServiceTcpIp
 #ifdef  waiwang
 #define lzz_ServiceTcpIp  "120.76.96.128"
 #else
-#define lzz_ServiceTcpIp  "192.168.0.168"
+#define lzz_ServiceTcpIp  "192.168.2.102"
 #endif
 #endif
 
