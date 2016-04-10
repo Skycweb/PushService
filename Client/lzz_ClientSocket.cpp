@@ -15,8 +15,8 @@ bool lzz_ClientSocket::TcpConnect(int port,char *pIp)
 	addrClt.sin_family = AF_INET;
 	addrClt.sin_port = htons(port);
 
-	int back = connect(sockClient, reinterpret_cast<SOCKADDR*>(&addrClt), sizeof(SOCKADDR));//客户机向服务器发出连接请求
-	if (back == 0)
+	int back = connect(sockClient, reinterpret_cast<SOCKADDR*>(&addrClt), addrClt_len);//客户机向服务器发出连接请求
+	if (back == SOCKET_ERROR)
 	{
 		lzz_out << "连接服务器失败" << lzz_endline;
 		return false;
@@ -90,8 +90,7 @@ void lzz_ClientSocket::UdpRecv(void *pData, int len, SOCKADDR* pAddress)
 
 lzz_ClientSocket::~lzz_ClientSocket()
 {
-	shutdown(sockClient, 2);
-	sockClient = 0;
+		closesocket(sockClient);
 }
 
 GUID lzz_ClientSocket::getID() const

@@ -12,7 +12,7 @@ private:
 	SOCKET sockClient = 0;
 	WSADATA wsa;
 	SOCKADDR_IN addrClt;
-	int addrClt_len = sizeof(addrClt);
+	int addrClt_len = sizeof(SOCKADDR_IN);
 	GUID my_guid_ID = {0};
 public:
 	lzz_ClientSocket();

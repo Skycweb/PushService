@@ -2,6 +2,8 @@
 
 #ifndef base_H
 #define base_H
+#include <WinSock2.h>
+#pragma comment( lib, "Ws2_32.lib" )
 #include <stdio.h>
 #include <iostream>
 #include <objbase.h>

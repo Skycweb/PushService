@@ -12,7 +12,11 @@ lzz_ServerSocket::lzz_ServerSocket(SOCKET *s)
 
 void lzz_ServerSocket::Accept(SOCKET* s, SOCKADDR* address)
 {
-		*s = accept(this->sk,address,&serverAddr_len);
+#ifdef  _IOCP_
+		*s = WSAAccept(this->sk, address, &serverAddr_len, lzz_nullptr, 0);
+#else
+		*s = accept(this->sk, address, &serverAddr_len);
+#endif
 }
 void lzz_ServerSocket::TcpBind(int port)
 {
@@ -21,7 +25,15 @@ void lzz_ServerSocket::TcpBind(int port)
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_port = htons(port);           /*本地监听端口*/
 	serverAddr.sin_addr.s_addr = htonl(INADDR_ANY); /*有IP*/
+#ifdef  _IOCP_
+	sk = WSASocket(AF_INET, SOCK_STREAM, 0, lzz_nullptr, 0, WSA_FLAG_OVERLAPPED);;
+#else
 	sk = socket(AF_INET, SOCK_STREAM, 0);
+#endif
+	if(sk == SOCKET_ERROR)
+	{
+		throw 10001;
+	}
 	bind(sk, reinterpret_cast<struct sockaddr *>(&serverAddr), sizeof(serverAddr));
 	listen(sk, 5000);
 }

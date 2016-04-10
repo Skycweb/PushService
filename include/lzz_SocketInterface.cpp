@@ -8,12 +8,16 @@ lzz_SocketInterface::lzz_SocketInterface()
 {
 	if (SocketLen == 0 && SocketStartup == 1)
 	{
+#ifdef  _IOCP_
+		SocketStartup = WSAStartup(0x0202, &wsa);
+#else
 		SocketStartup = WSAStartup(MAKEWORD(1, 1), &wsa);
+#endif
 		/*初始化socket资源*/
 		if (SocketStartup != 0)
 		{
-			//lzz_out << "初始化socket资源库失败" << lzz_endline;
-			//lzz_out << "请关闭程序从新开始" << lzz_endline;
+			lzz_out << "初始化socket资源库失败" << lzz_endline;
+			lzz_out << "请关闭程序从新开始" << lzz_endline;
 		}
 	}
 	SocketLen++;

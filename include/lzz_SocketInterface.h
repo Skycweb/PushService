@@ -1,6 +1,6 @@
 #pragma once
 #include "base.h"
-
+#define _IOCP_
 
 class lzz_SocketInterface
 {
