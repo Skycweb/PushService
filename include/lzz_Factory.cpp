@@ -33,3 +33,7 @@ void lzz_Factory::BindView()
 {
 	
 }
+
+void lzz_Factory::backFunction(int actionType)
+{
+}

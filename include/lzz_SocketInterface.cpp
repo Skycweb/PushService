@@ -42,12 +42,22 @@ bool lzz_SocketInterface::TcpSend(void* pData, int len)
 	return false;
 }
 
+bool lzz_SocketInterface::TcpSend(void* pData, int len, lzz_Factory* f, int ActionType)
+{
+	return false;
+}
+
 bool lzz_SocketInterface::TcpSend(void* pData, int len, ActionType a)
 {
 	return false;
 }
 
 bool lzz_SocketInterface::TcpRecv(void* pData, int len)
+{
+	return false;
+}
+
+bool lzz_SocketInterface::TcpRecv(void* pData, int len, lzz_Factory* f, int ActionType)
 {
 	return false;
 }

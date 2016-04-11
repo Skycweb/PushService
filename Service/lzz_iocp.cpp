@@ -10,24 +10,7 @@ http://www.cppfans.org
 
 using namespace std;
 DWORD WINAPI ServerWorkThread(LPVOID CompletionPortID);
-std::string GuidToString(const GUID &guid)
-{
-	char buf[64] = { 0 };
-#ifdef __GNUC__
-	snprintf(
-#else // MSVC
-	_snprintf_s(
-#endif
-		buf,
-		sizeof(buf),
-		"{%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X}",
-		guid.Data1, guid.Data2, guid.Data3,
-		guid.Data4[0], guid.Data4[1],
-		guid.Data4[2], guid.Data4[3],
-		guid.Data4[4], guid.Data4[5],
-		guid.Data4[6], guid.Data4[7]);
-	return std::string(buf);
-}
+
 void main()
 {
 
@@ -72,7 +55,7 @@ void main()
 	}
 
 	// 启动一个监听socket
-	SOCKET listenSocket = WSASocket(AF_INET, SOCK_STREAM, 0, lzz_nullptr, 0, WSA_FLAG_OVERLAPPED);
+	SOCKET listenSocket = WSASocketW(AF_INET, SOCK_STREAM, 0, lzz_nullptr, 0, WSA_FLAG_OVERLAPPED);
 	if (listenSocket == INVALID_SOCKET)
 	{
 		std::cout << " WSASocket( listenSocket ) failed. Error:" << GetLastError() << std::endl;
@@ -135,7 +118,7 @@ void main()
 		pIoData->databuff.buf = pIoData->buffer;
 
 		flags = 0;
-		lzz_out << "上下文:" << GuidToString(pIoData->id) << lzz_endline;
+		lzz_out << "上下文:" << lzz_GuidToString(pIoData->id) << lzz_endline;
 		if (WSARecv(acceptSocket, &(pIoData->databuff), 1, &recvBytes, &flags, &(pIoData->overlapped), lzz_nullptr) == SOCKET_ERROR)
 		{
 			if (WSAGetLastError() != ERROR_IO_PENDING)
@@ -172,8 +155,8 @@ DWORD WINAPI ServerWorkThread(LPVOID CompletionPortID)
 			std::cout << "GetQueuedCompletionStatus failed. Error:" << GetLastError() << std::endl;
 			return 0;
 		}
-		lzz_out << "工作者:" << GuidToString(id) << lzz_endline;
-		lzz_out << "上下文:" << GuidToString(pIoData->id) << lzz_endline;
+		lzz_out << "工作者:" << lzz_GuidToString(id) << lzz_endline;
+		lzz_out << "上下文:" << lzz_GuidToString(pIoData->id) << lzz_endline;
 		// 检查数据是否已经传输完了
 		if (bytesTransferred == 0)
 		{

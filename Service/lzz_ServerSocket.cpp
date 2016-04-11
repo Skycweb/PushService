@@ -10,6 +10,13 @@ lzz_ServerSocket::lzz_ServerSocket(SOCKET *s)
 	sk = *s;
 }
 
+lzz_ServerSocket::lzz_ServerSocket(SOCKET* s, lzz_LPPER_HANDLE_DATA _phandle, lzz_LPPER_IO_OPERATION_DATA _pIo)
+{
+	y_pHaandle = _phandle;
+	y_pIo = _pIo;
+	sk = *s;
+}
+
 void lzz_ServerSocket::Accept(SOCKET* s, SOCKADDR* address)
 {
 #ifdef  _IOCP_
@@ -26,7 +33,7 @@ void lzz_ServerSocket::TcpBind(int port)
 	serverAddr.sin_port = htons(port);           /*本地监听端口*/
 	serverAddr.sin_addr.s_addr = htonl(INADDR_ANY); /*有IP*/
 #ifdef  _IOCP_
-	sk = WSASocket(AF_INET, SOCK_STREAM, 0, lzz_nullptr, 0, WSA_FLAG_OVERLAPPED);;
+	sk = WSASocketW(AF_INET, SOCK_STREAM, 0, lzz_nullptr, 0, WSA_FLAG_OVERLAPPED);;
 #else
 	sk = socket(AF_INET, SOCK_STREAM, 0);
 #endif
@@ -40,20 +47,56 @@ void lzz_ServerSocket::TcpBind(int port)
 
 bool lzz_ServerSocket::TcpSend(void* pData,int len)
 {
+	if(y_pHaandle != lzz_nullptr)
+	{
+		lzz_Memcpy(y_pIo->buffer, pData, len);
+		return WSASend(sk, &y_pIo->databuff, 1, &y_pIo->bytesSend, 0, &y_pIo->overlapped, lzz_nullptr) == WSA_IO_PENDING;
+	}
+	else
+	{
 	int state = send(sk, static_cast<char*>(pData), len, 0);
 	return state == len;
+	}
+
+}
+
+bool lzz_ServerSocket::TcpRecv(void* pData, int len, lzz_Factory* f, int ActionType)
+{
+	y_pIo->databuff.buf = (char*)pData;
+	y_pIo->databuff.len = len;
+	y_pIo->factory = f;
+	y_pIo->ActionType;
+	return WSARecv(sk, &y_pIo->databuff, 1, &y_pIo->bytesSend, 0, &y_pIo->overlapped, lzz_nullptr) == WSA_IO_PENDING;
+}
+
+bool lzz_ServerSocket::TcpSend(void* pData, int len, lzz_Factory* f, int ActionType)
+{
+	y_pIo->databuff.buf = (char*)pData;
+	y_pIo->databuff.len = len;
+	y_pIo->factory = f;
+	y_pIo->ActionType = ActionType;
+	return WSASend(sk, &y_pIo->databuff, 1, &y_pIo->bytesSend, 0, &y_pIo->overlapped, lzz_nullptr) == WSA_IO_PENDING;
 }
 
 bool lzz_ServerSocket::TcpRecv(void* pData,int len)
 {
-	for (int i = 0; i < len;i++)
+	if (y_pHaandle != lzz_nullptr)
 	{
-		if(	recv(sk, static_cast<char*>(pData) + i, 1, 0) <= 0)
-		{
-			return false;
-		}
+		lzz_Memcpy(y_pIo->buffer, pData, len);
+		return WSARecv(sk, &y_pIo->databuff, 1, &y_pIo->bytesSend, 0, &y_pIo->overlapped, lzz_nullptr) == WSA_IO_PENDING;
 	}
-	return true;
+	else
+	{
+		for (int i = 0; i < len;i++)
+		{
+			if (recv(sk, static_cast<char*>(pData) + i, 1, 0) <= 0)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
 }
 
 void lzz_ServerSocket::UdpBind(int port)

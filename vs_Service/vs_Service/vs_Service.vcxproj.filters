@@ -72,6 +72,9 @@
     <ClCompile Include="..\..\Service\lzz_iocp.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Service\lzz_PushMsg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Service\lzz_Heartbeat.h">
@@ -129,6 +132,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Service\lzz_iocp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Service\lzz_PushMsg.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

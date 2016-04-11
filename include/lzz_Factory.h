@@ -15,6 +15,7 @@ public:
 	*/
 	virtual void init(lzz_SocketInterface*,lzz_ClientList*,char*,SOCKADDR*);//初始化
 	virtual void BindView();
+	virtual void backFunction(int actionType);///IOCP回调 函数
 protected:
 	SOCKADDR address_sockaddr_;//访问者地址
 	lzz_SocketInterface *sk = lzz_nullptr;//访问者地址

@@ -2,13 +2,15 @@
 
 #ifndef base_H
 #define base_H
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include <WinSock2.h>
 #pragma comment( lib, "Ws2_32.lib" )
 #include <stdio.h>
 #include <iostream>
 #include <objbase.h>
 #include <process.h>
-
+#include <string>
+#include <ctime>
 //#define lzzgcc // gcc开关
 //#define waiwang
 
@@ -113,8 +115,7 @@
 
 
 void lzz_STR_2_GUID(wchar_t* cstr, GUID *stGuid);
-
-
+std::string lzz_GuidToString(const GUID &guid);
 
 namespace _ActionType {
 	//访问类型
@@ -122,7 +123,8 @@ namespace _ActionType {
 	{
 		None = 0,
 		Heartbeat = 1,
-		PushAction = 2 //推送
+		PushAction = 2, //推送
+		PushMsg = 3 //聊天专用
 	};
 }
 typedef _ActionType::ActionType_ ActionType;

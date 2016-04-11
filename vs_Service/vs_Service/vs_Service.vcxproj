@@ -127,6 +127,7 @@
     <ClCompile Include="..\..\Service\lzz_Heartbeat.cpp" />
     <ClCompile Include="..\..\Service\lzz_iocp.cpp" />
     <ClCompile Include="..\..\Service\lzz_Push.cpp" />
+    <ClCompile Include="..\..\Service\lzz_PushMsg.cpp" />
     <ClCompile Include="..\..\Service\lzz_pushOut.cpp" />
     <ClCompile Include="..\..\Service\lzz_Push_Modle.cpp" />
     <ClCompile Include="..\..\Service\lzz_RecvThread.cpp" />
@@ -148,6 +149,7 @@
     <ClInclude Include="..\..\Service\lzz_Heartbeat.h" />
     <ClInclude Include="..\..\Service\lzz_iocp.h" />
     <ClInclude Include="..\..\Service\lzz_Push.h" />
+    <ClInclude Include="..\..\Service\lzz_PushMsg.h" />
     <ClInclude Include="..\..\Service\lzz_pushOut.h" />
     <ClInclude Include="..\..\Service\lzz_Push_Modle.h" />
     <ClInclude Include="..\..\Service\lzz_RecvThread.h" />

@@ -11,7 +11,7 @@ private:
 	static void* p_lzz_Push_Modle;
 	static int count;//最多可以接收多少个推送
 	static volatile bool isInitialization;//初始化
-	 static volatile bool read;//读取锁
+	static volatile bool read;//读取锁
 public:
 	lzz_Push();
 	static void AddModle(GUID, char*,int);
