@@ -3,7 +3,7 @@
 
 #include "../include/lzz_Thread.h"
 #include "../include/lzz_Factory.h"
-
+#include "lzz_ServerSocket.h"
 
 class lzz_TcpRecvAction : public lzz_Thread
 {

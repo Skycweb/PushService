@@ -12,7 +12,7 @@ private:
 	lzz_SocketInterface *skTcp = new lzz_ServerSocket();//创建SOCKET
 	lzz_ClientList *cl = new lzz_ClientList();//访问者列表
 	lzz_RecvThread *rt = new lzz_RecvThread(sk,cl);
-	lzz_TcpRecv *tcp = new lzz_TcpRecv(skTcp);
+	lzz_TcpRecv *tcp = new lzz_TcpRecv(skTcp,cl);
 	lzz_pushOut *pushOut = new lzz_pushOut(sk, cl);
 public:
 	lzz_StartServer();

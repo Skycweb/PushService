@@ -123,6 +123,7 @@
     <ClInclude Include="..\..\Client\lzz_HeartbeatThread.h" />
     <ClInclude Include="..\..\Client\lzz_push.h" />
     <ClInclude Include="..\..\Client\lzz_RunStart.h" />
+    <ClInclude Include="..\..\Client\lzz_SendMsg.h" />
     <ClInclude Include="..\..\Client\lzz_UdpRecv.h" />
     <ClInclude Include="..\..\include\base.h" />
     <ClInclude Include="..\..\include\lzz_ClientList.h" />
@@ -137,6 +138,7 @@
     <ClCompile Include="..\..\Client\lzz_HeartbeatThread.cpp" />
     <ClCompile Include="..\..\Client\lzz_Push.cpp" />
     <ClCompile Include="..\..\Client\lzz_RunStart.cpp" />
+    <ClCompile Include="..\..\Client\lzz_SendMsg.cpp" />
     <ClCompile Include="..\..\Client\lzz_UdpRecv.cpp" />
     <ClCompile Include="..\..\include\lzz_base.cpp" />
     <ClCompile Include="..\..\include\lzz_ClientList.cpp" />

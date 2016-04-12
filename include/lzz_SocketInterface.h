@@ -1,8 +1,11 @@
-#pragma once
+#ifndef  _lzz_SocketInterface_
+#define  _lzz_SocketInterface_
 #include "base.h"
 #include "lzz_Factory.h"
 
 #define DataBuffSize 1024
+
+class lzz_Factory;
 typedef struct
 {
 	OVERLAPPED overlapped;
@@ -10,7 +13,7 @@ typedef struct
 	CHAR buffer[DataBuffSize];
 	DWORD bytesSend;
 	DWORD bytesRecv;
-	lzz_Factory* factory = lzz_nullptr;
+	lzz_Factory* factory;
 	int ActionType = 0;
 }lzz_PER_IO_OPERATEION_DATA, *lzz_LPPER_IO_OPERATION_DATA;
 
@@ -18,7 +21,6 @@ typedef struct
 {
 	SOCKET socket;
 }lzz_PER_HANDLE_DATA, *lzz_LPPER_HANDLE_DATA;
-
 
 class lzz_SocketInterface
 {
@@ -37,7 +39,7 @@ public:
 	/*接收信息*/
 	virtual bool TcpRecv(void *pData, int len);
 	/*接收信息*/
-	virtual bool TcpRecv(void *pData, int len,lzz_Factory * f, int ActionType);
+	virtual bool TcpRecv(void *pData, int len, lzz_Factory * f, int ActionType);
 	/*发送信息*/
 	virtual void UdpSend(void* pData, int len, ActionType at, SOCKADDR* pAddress);
 	/*发送信息*/
@@ -53,3 +55,6 @@ private:
 	static int SocketStartup;
 	static int SocketLen;
 };
+
+
+#endif

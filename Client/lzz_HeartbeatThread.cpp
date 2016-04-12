@@ -4,7 +4,6 @@
 
 lzz_HeartbeatThread::lzz_HeartbeatThread(lzz_ClientSocket *s)
 {
-	guid_id = s->getID();
 	this->sk = s;
 }
 
@@ -28,7 +27,7 @@ void lzz_HeartbeatThread::run()
 	is_close_b_ = &run;
 	while(run)
 	{
-		sk->UdpSend(&guid_id, 16, ActionType::Heartbeat);
+		sk->UdpSend(&lzz_UserId, 16, ActionType::Heartbeat);
 		//lzz_out << "我发起了心跳包:" << lzz_endline;
 		Sleep(1000*10);
 	}

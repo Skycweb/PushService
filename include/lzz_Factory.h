@@ -1,19 +1,21 @@
-#pragma once
+
+
+#ifndef _lzz_Factory_
+#define _lzz_Factory_
+
 #include  "base.h"
-#include "../Service/lzz_ServerSocket.h"
+#include "lzz_SocketInterface.h"
 #include "lzz_ClientList.h"
 #include "lzz_Object.h"
-
+class lzz_SocketInterface;
 class lzz_Factory:public lzz_Object
 {
 public:
 	lzz_Factory();
 	virtual ~lzz_Factory();
 	virtual void onLoad();
-	/*
-	初始化
-	*/
-	virtual void init(lzz_SocketInterface*,lzz_ClientList*,char*,SOCKADDR*);//初始化
+	/*初始化*/
+	virtual void init(lzz_SocketInterface *_sk,lzz_ClientList *_cl,char *reqest,SOCKADDR* address);
 	virtual void BindView();
 	virtual void backFunction(int actionType);///IOCP回调 函数
 protected:
@@ -27,3 +29,4 @@ protected:
 	GUID SessionId;//访问事件ID
 };
 
+#endif

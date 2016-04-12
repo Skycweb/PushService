@@ -4,7 +4,11 @@
 
 lzz_ClientSocket::lzz_ClientSocket()
 {
-	lzz_STR_2_GUID(L"{74B0E245-EA33-4869-8DE3-B5A51E1E1C7D}", &my_guid_ID);
+}
+
+lzz_ClientSocket::lzz_ClientSocket(GUID userId)
+{
+	my_guid_ID = userId;
 }
 
 bool lzz_ClientSocket::TcpConnect(int port,char *pIp)

@@ -3,8 +3,9 @@
 
 
 
-lzz_RunStart::lzz_RunStart()
+lzz_RunStart::lzz_RunStart(GUID userId)
 {
+	sk = new lzz_ClientSocket(userId);
 }
 
 lzz_ClientSocket* lzz_RunStart::getSOCKET()
@@ -38,6 +39,9 @@ void lzz_RunStart::run()
 		case _ActionType::PushAction: 
 			f = new lzz_Push();
 			break;
+		case ActionType::PushMsg:
+			f = new lzz_SendMsg();
+			break
 		default: break;
 		}
 		if (f) {

@@ -29,14 +29,20 @@ void lzz_PushMsg::Recv()
 	{
 		model = *i;
 		if (model->isUse)
+		{
+			model->isUse = false;
 			break;
-		else if(model->CreateTime - newTime > 1000*60*1)
+		}
+		if(model->CreateTime - newTime > 1000*60*1)
 		{
 			lzz_UserModle* uModel = cl->GetClient(model->RecvUserId);
 			if (uModel != lzz_nullptr)
 			{
 				lzz_ServerSocket *udpsk = new lzz_ServerSocket();
-				udpsk->UdpSend(&model->Id, 16, ActionType::PushMsg, uModel->getAddr());
+				char data[16 + 4];
+				lzz_Memcpy(data, &model->Id, 16);
+				lzz_Memcpy(&data[16], &model->Len, 4);
+				udpsk->UdpSend(data, 20, ActionType::PushMsg, uModel->getAddr());
 				lzz_Delete(udpsk);
 			}
 		}
@@ -56,6 +62,7 @@ void lzz_PushMsg::Recv()
 			udpsk->UdpSend(&model->Id, 16, ActionType::PushMsg, uModel->getAddr());
 			lzz_Delete(udpsk);
 		}
+		sk->TcpSend(new char{ 1 }, 1, this, 3);
 	}
 }
  
@@ -97,14 +104,18 @@ void lzz_PushMsg::backFunction(int actionType)
 		{
 			lzz_ZeroMemory(y_SendMsgModel, sizeof(lzz_MsgModel));
 			y_SendMsgModel->isUse = true;
+			CloseHandle((HANDLE)sk->y_pHaandle->socket);
 		}
+		break;
+	case 3:
+		lzz_Delete(sk->y_pIo->factory);
 		break;
 	}
 }
 
 void lzz_PushMsg::onLoad()
 {
-	char type = request[1];
+	char type = request[0];
 	switch(type)
 	{
 		case 1:

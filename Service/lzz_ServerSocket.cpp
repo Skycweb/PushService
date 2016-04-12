@@ -20,7 +20,7 @@ lzz_ServerSocket::lzz_ServerSocket(SOCKET* s, lzz_LPPER_HANDLE_DATA _phandle, lz
 void lzz_ServerSocket::Accept(SOCKET* s, SOCKADDR* address)
 {
 #ifdef  _IOCP_
-		*s = WSAAccept(this->sk, address, &serverAddr_len, lzz_nullptr, 0);
+		*s = WSAAccept(this->sk, lzz_nullptr, lzz_nullptr , lzz_nullptr, 0);
 #else
 		*s = accept(this->sk, address, &serverAddr_len);
 #endif
@@ -41,9 +41,16 @@ void lzz_ServerSocket::TcpBind(int port)
 	{
 		throw 10001;
 	}
-	bind(sk, reinterpret_cast<struct sockaddr *>(&serverAddr), sizeof(serverAddr));
-	listen(sk, 5000);
+	if(bind(sk, (sockaddr *)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR)
+	{
+		throw 10001;
+	}
+	if(listen(sk, 2000) == SOCKET_ERROR)
+	{
+		throw 10001;
+	}
 }
+
 
 bool lzz_ServerSocket::TcpSend(void* pData,int len)
 {
@@ -60,7 +67,7 @@ bool lzz_ServerSocket::TcpSend(void* pData,int len)
 
 }
 
-bool lzz_ServerSocket::TcpRecv(void* pData, int len, lzz_Factory* f, int ActionType)
+bool lzz_ServerSocket::TcpRecv(void* pData, int len, lzz_Factory * f, int ActionType)
 {
 	y_pIo->databuff.buf = (char*)pData;
 	y_pIo->databuff.len = len;

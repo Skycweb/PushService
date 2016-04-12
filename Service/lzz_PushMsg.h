@@ -1,11 +1,15 @@
 /*
 	ÁÄÌì×¨ÓÃ
 */
-#pragma once
+
+#ifndef _lzz_PushMsg_
+#define  _lzz_PushMsg_
+
+
 #include "../include/base.h"
 #include "../include/lzz_Factory.h"
-#include <list>
 #include "lzz_UserModle.h"
+#include "lzz_ServerSocket.h"
 
 
 struct lzz_MsgModel
@@ -38,3 +42,4 @@ public:
 };
 
 
+#endif

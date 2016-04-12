@@ -11,8 +11,11 @@
 #include <process.h>
 #include <string>
 #include <ctime>
+#include <list>
 //#define lzzgcc // gcc开关
 //#define waiwang
+//全局UserId
+GUID lzz_UserId;
 
 #ifndef lzz_ServiceTcpIp
 #ifdef  waiwang

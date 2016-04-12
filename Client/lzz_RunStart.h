@@ -4,16 +4,19 @@
 #include "../include/lzz_Thread.h"
 #include "../include/lzz_Factory.h"
 #include "lzz_push.h"
+#include "lzz_SendMsg.h"
+
+
 class lzz_RunStart :
 	public lzz_Thread
 {
 public:
-	lzz_RunStart();
+	lzz_RunStart(GUID);
 	lzz_ClientSocket *getSOCKET();
 	void run() override;
 	virtual ~lzz_RunStart();
 private:
 	bool *isRun = nullptr;//运行开关
-	lzz_ClientSocket *sk = new lzz_ClientSocket();
+	lzz_ClientSocket *sk;
 };
 

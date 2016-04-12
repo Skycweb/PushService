@@ -13,7 +13,8 @@ lzz_TcpRecv::lzz_TcpRecv(lzz_SocketInterface* s, lzz_ClientList* _cl)
 
 lzz_TcpRecv::~lzz_TcpRecv()
 {
-	*isRun = false;
+	if(isRun != lzz_nullptr)
+		*isRun = false;
 }
 
 void lzz_TcpRecv::run()
@@ -77,6 +78,7 @@ void lzz_TcpRecv::run()
 			}
 		}
 	}
+	isRun = lzz_nullptr;
 }
 
 DWORD lzz_TcpRecv::ServerWorkThread(LPVOID CompletionPortID)
@@ -128,13 +130,13 @@ DWORD lzz_TcpRecv::ServerWorkThread(LPVOID CompletionPortID)
 			pIoData->factory->backFunction(pIoData->ActionType);
 			continue;
 		}
-		int DataLen = *((int*)pIoData->databuff.buf);
-		ActionType type = *(ActionType*)&pIoData->databuff.buf[4];
+		int DataLen = *((int*)&pIoData->databuff.buf[4]);
+		ActionType type = *(ActionType*)pIoData->databuff.buf;
 		char* p_str = lzz_nullptr;
 		p_str = new char[DataLen];
 		lzz_Memcpy(p_str, &pIoData->databuff.buf[8], DataLen);
-		lzz_SocketInterface* interface_sk = new lzz_ServerSocket(&pHandleData->socket,pHandleData,pIoData);
-		if (interface_sk == lzz_nullptr) continue;
+		lzz_SocketInterface * _interface_sk = new lzz_ServerSocket(&pHandleData->socket,pHandleData,pIoData);
+		if (_interface_sk == lzz_nullptr) continue;
 		lzz_Factory* f = lzz_nullptr;
 		switch (type)
 		{
@@ -148,7 +150,7 @@ DWORD lzz_TcpRecv::ServerWorkThread(LPVOID CompletionPortID)
 		}
 		if (f != lzz_nullptr)
 		{
-			f->init(interface_sk, cl, p_str, nullptr);
+			f->init(_interface_sk, cl, p_str, nullptr);
 			f->onLoad();
 			f->BindView();
 		}
