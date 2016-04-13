@@ -11,7 +11,7 @@ class lzz_RunStart :
 	public lzz_Thread
 {
 public:
-	lzz_RunStart(GUID);
+	lzz_RunStart();
 	lzz_ClientSocket *getSOCKET();
 	void run() override;
 	virtual ~lzz_RunStart();

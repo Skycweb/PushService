@@ -4,11 +4,7 @@
 
 lzz_ClientSocket::lzz_ClientSocket()
 {
-}
-
-lzz_ClientSocket::lzz_ClientSocket(GUID userId)
-{
-	my_guid_ID = userId;
+	my_guid_ID = lzz_UserId;
 }
 
 bool lzz_ClientSocket::TcpConnect(int port,char *pIp)
@@ -71,7 +67,7 @@ bool lzz_ClientSocket::UdpBind(char* pIp, int port)
 	addrClt.sin_family = AF_INET;  //设置地址家族
 	addrClt.sin_port = htons(port);  //设置端口
 	addrClt.sin_addr.s_addr = inet_addr(pIp);  //设置地址
-	return (sockClient = socket(AF_INET, SOCK_DGRAM, 0)) > 0;
+	return (sockClient = socket(AF_INET, SOCK_DGRAM, 0)) != SOCKET_ERROR;
 }
 
 void lzz_ClientSocket::UdpSend(void* pData, int len, ActionType at)

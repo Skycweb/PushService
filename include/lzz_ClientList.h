@@ -9,6 +9,7 @@ class lzz_ClientList
 private:
 	std::map<GUID, lzz_UserModle*> list;
 	bool addMap(GUID, lzz_UserModle*);
+	GUID *y_empty;
 	lzz_UserModle* FindMap(GUID);
 public:
 	lzz_ClientList();

@@ -29,6 +29,7 @@ lzz_UserModle *lzz_ClientList::FindMap(GUID key)
 
 lzz_ClientList::lzz_ClientList()
 {
+	y_empty = new GUID;
 }
 
 bool lzz_ClientList::SaveClient(GUID key, lzz_UserModle *ip)
@@ -38,11 +39,14 @@ bool lzz_ClientList::SaveClient(GUID key, lzz_UserModle *ip)
 
 lzz_UserModle* lzz_ClientList::GetClient(GUID key)
 {
+	if (key == *y_empty)
+		return lzz_nullptr;
 	return FindMap(key);
 }
 
 lzz_ClientList::~lzz_ClientList()
 {
+	lzz_Delete(y_empty);
 }
 
 size_t lzz_ClientList::GetCount()

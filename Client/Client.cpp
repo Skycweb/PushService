@@ -6,25 +6,40 @@
 
 int main(int argc, char* argv[])
 {
-	lzz_NewGuid(&lzz_UserId);
+	lzz_out << "1or2" << lzz_endline;
+	char ty[1];
+	lzz_in >> ty;
+	GUID _RecvUserId;
+	if(ty[0] == 49)
+	{
+		lzz_STR_2_GUID(L"{AB78C729-3A7A-4172-8BCF-2C9D72A46481}", &lzz_UserId);
+		lzz_STR_2_GUID(L"{75825370-4171-42BD-8C93-3A0C5F6F14D1}", &_RecvUserId);
+	}
+	else
+	{
+		lzz_STR_2_GUID(L"{75825370-4171-42BD-8C93-3A0C5F6F14D1}", &lzz_UserId);
+		lzz_STR_2_GUID(L"{AB78C729-3A7A-4172-8BCF-2C9D72A46481}", &_RecvUserId);
+	}
+	//lzz_NewGuid(&lzz_UserId);
 	lzz_out << "UserId：" << lzz_GuidToString(lzz_UserId) << lzz_endline;
 	//lzz_in >> id;
 	//GUID userId;
-	//int len = MultiByteToWideChar(CP_ACP, 0, id, -1, NULL, 0);
-	//wchar_t *w_string = new wchar_t[len];
-	//memset(w_string, 0, sizeof(wchar_t)*len);
-	//MultiByteToWideChar(CP_ACP, 0, id, -1, w_string, len);
-	//lzz_STR_2_GUID(w_string, &userId);
 
-	lzz_RunStart *rs = new lzz_RunStart(lzz_UserId);
-	rs->Start();
+	lzz_RunStart *rs = new lzz_RunStart();
 	lzz_HeartbeatThread *ht = new lzz_HeartbeatThread(rs->getSOCKET());
 	ht->Start();
+	rs->Start();
+	lzz_SendMsg * msg = new lzz_SendMsg();
 	char ActionCode[10];
+	
 	while (lzz_Strcmp("close", ActionCode) != 0)
 	{
-		lzz_out << "输入close关闭程序" << lzz_endline;
-		lzz_in >> ActionCode;
+		lzz_out << "请输入发送的信息：" << lzz_endline;
+		char msgData[200] = {0};
+		lzz_in >> msgData;
+		msg->Send(_RecvUserId, msgData, 200);
+//		lzz_out << "输入close关闭程序"  << lzz_endline;
+//		lzz_in >> ActionCode;
 	}
 	delete ht;
 	delete rs;

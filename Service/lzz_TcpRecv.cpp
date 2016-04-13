@@ -1,7 +1,5 @@
 #include "lzz_TcpRecv.h"
-#include "lzz_TcpRecvAction.h"
 
-lzz_TcpRecv::lzz_TcpRecv(lzz_SocketInterface* s)
 
 lzz_ClientList* lzz_TcpRecv::cl = lzz_nullptr;
 
@@ -9,27 +7,24 @@ lzz_ClientList* lzz_TcpRecv::cl = lzz_nullptr;
 lzz_TcpRecv::lzz_TcpRecv(lzz_SocketInterface* s, lzz_ClientList* _cl)
 {
 	sk = s;
-
-	if (cl != lzz_nullptr)
+	if (cl == lzz_nullptr)
 		cl = _cl;
 }
 
 lzz_TcpRecv::~lzz_TcpRecv()
 {
-	*isRun = false;
-	if(isRun != lzz_nullptr)
+	if (isRun != lzz_nullptr)
 		*isRun = false;
 }
 
 void lzz_TcpRecv::run()
 {
-//	lzz_out << "进入等待接入" << lzz_endline;
 	//	lzz_out << "进入等待接入" << lzz_endline;
 	bool _Run = true;
 	isRun = &_Run;
 	SOCKET _socket;
 	SOCKADDR address;
-	lzz_ZeroMemory(&_socket,sizeof(SOCKET));
+	lzz_ZeroMemory(&_socket, sizeof(SOCKET));
 	HANDLE completionPort;
 	completionPort = CreateIoCompletionPort(INVALID_HANDLE_VALUE, lzz_nullptr, 0, 0);
 	if (completionPort == lzz_nullptr)
@@ -59,22 +54,20 @@ void lzz_TcpRecv::run()
 		sk->Accept(&_socket, &address);
 		if (_socket == INVALID_SOCKET)
 			break;
-//		lzz_out << "收到一个连接接入" << lzz_endline;
-		lzz_TcpRecvAction* a = getAction();
-		if (a != lzz_nullptr) {
-			a->SetSKOCKET(&_socket);
-			a->Start();
 		lzz_LPPER_HANDLE_DATA socket = new lzz_PER_HANDLE_DATA;
 		socket->socket = _socket;
 		lzz_LPPER_IO_OPERATION_DATA pIoData = new lzz_PER_IO_OPERATEION_DATA;
-
+		pIoData->databuff.buf = pIoData->buffer;
+		pIoData->databuff.len = DataBuffSize;
 		lzz_out << "收到一个连接接入" << lzz_endline;
 		if (CreateIoCompletionPort((HANDLE)_socket, completionPort, (ULONG_PTR)socket, 0) == lzz_nullptr)
 		{
 			std::cout << "CreateIoCompletionPort failed. Error:" << GetLastError() << std::endl;
 			return;
 		}
-		if (WSARecv(_socket, &(pIoData->databuff), 1, &(pIoData->bytesRecv), 0, &(pIoData->overlapped), lzz_nullptr) == SOCKET_ERROR)
+		DWORD recvLen = 0;
+		DWORD lpFlags = 0;
+		if (WSARecv(_socket, &(pIoData->databuff), 1, &recvLen, &lpFlags, &(pIoData->overlapped), lzz_nullptr) == SOCKET_ERROR)
 		{
 			if (WSAGetLastError() != ERROR_IO_PENDING)
 			{
@@ -91,13 +84,8 @@ void lzz_TcpRecv::run()
 	isRun = lzz_nullptr;
 }
 
-lzz_TcpRecvAction* lzz_TcpRecv::getAction()
 DWORD lzz_TcpRecv::ServerWorkThread(LPVOID CompletionPortID)
 {
-	int len = 0;
-	lzz_ARRAY_LEN(tcpAction, len);
-	for (int i = 0; i < len;i++)
-
 	GUID id;
 	lzz_NewGuid(&id);
 	HANDLE complationPort = (HANDLE)CompletionPortID;
@@ -110,17 +98,11 @@ DWORD lzz_TcpRecv::ServerWorkThread(LPVOID CompletionPortID)
 
 	while (1)
 	{
-		if (tcpAction[i].isOk)
 		if (GetQueuedCompletionStatus(complationPort, &bytesTransferred, (PULONG_PTR)&pHandleData, (LPOVERLAPPED *)&pIoData, INFINITE) == 0)
-
 		{
-			tcpAction[i].isOk = false;
-			return &(tcpAction[i]);
 			std::cout << "GetQueuedCompletionStatus failed. Error:" << GetLastError() << std::endl;
 			return 0;
 		}
-		if (i == len-1)
-			i = 0;
 		lzz_out << "工作者:" << lzz_GuidToString(id) << lzz_endline;
 		// 检查数据是否已经传输完了
 		if (bytesTransferred == 0)
@@ -137,16 +119,10 @@ DWORD lzz_TcpRecv::ServerWorkThread(LPVOID CompletionPortID)
 		}
 
 		// 检查管道里是否有数据
-		if (pIoData->bytesRecv == 0)
-		{
+
 			pIoData->bytesRecv = bytesTransferred;
-			pIoData->bytesSend = 0;
-		}
-		else
-		{
-			pIoData->bytesSend += bytesTransferred;
-		}
-		if(pIoData->factory != lzz_nullptr)
+			pIoData->bytesSend = bytesTransferred;
+		if (pIoData->factory != lzz_nullptr)
 		{
 			pIoData->factory->backFunction(pIoData->ActionType);
 			continue;
@@ -156,7 +132,7 @@ DWORD lzz_TcpRecv::ServerWorkThread(LPVOID CompletionPortID)
 		char* p_str = lzz_nullptr;
 		p_str = new char[DataLen];
 		lzz_Memcpy(p_str, &pIoData->databuff.buf[8], DataLen);
-		lzz_SocketInterface * _interface_sk = new lzz_ServerSocket(&pHandleData->socket,pHandleData,pIoData);
+		lzz_SocketInterface * _interface_sk = new lzz_ServerSocket(&pHandleData->socket, pHandleData, pIoData);
 		if (_interface_sk == lzz_nullptr) continue;
 		lzz_Factory* f = lzz_nullptr;
 		switch (type)
@@ -225,5 +201,4 @@ DWORD lzz_TcpRecv::ServerWorkThread(LPVOID CompletionPortID)
 		//			}
 		//		}
 	}
-	return lzz_nullptr;
 }

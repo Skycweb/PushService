@@ -23,7 +23,7 @@ void lzz_UserModle::setClientType(lzz_ClientType* ct)
 }
 
 SOCKADDR* lzz_UserModle::getAddr()
-{
+ {
 	return &addr;
 }
 

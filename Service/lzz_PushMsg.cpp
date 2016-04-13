@@ -2,6 +2,8 @@
 
 void* lzz_PushMsg::y_pVoid = lzz_nullptr;
 msgList lzz_PushMsg::y_msgList;
+lzz_MsgSendNotice* lzz_PushMsg::y_Notice = lzz_nullptr;
+msgList lzz_PushMsg::y_waitMsgList;
 int lzz_PushMsg::y_msgCount = 100000;
 
 lzz_PushMsg::lzz_PushMsg()
@@ -18,6 +20,13 @@ lzz_PushMsg::lzz_PushMsg()
 				}
 		}
 	}
+	y_SendMsgBackCode = new char[1];
+	udpsk->UdpBind(5648);
+}
+lzz_PushMsg::~lzz_PushMsg()
+{
+	lzz_Delete(y_SendMsgBackCode);
+	lzz_Delete(udpsk);
 }
 
 
@@ -25,7 +34,7 @@ void lzz_PushMsg::Recv()
 {
 	lzz_MsgModel* model = lzz_nullptr;
 	time_t newTime = time(0);
-	for (msgE i = y_msgList.begin(); i != y_msgList.end();i++)
+	for (msgE i = y_msgList.begin(); i != y_msgList.end(); i++)
 	{
 		model = *i;
 		if (model->isUse)
@@ -33,34 +42,30 @@ void lzz_PushMsg::Recv()
 			model->isUse = false;
 			break;
 		}
-		if(model->CreateTime - newTime > 1000*60*1)
+		if (model->CreateTime - newTime > 1000 * 60 * 1)
 		{
 			lzz_UserModle* uModel = cl->GetClient(model->RecvUserId);
 			if (uModel != lzz_nullptr)
 			{
-				lzz_ServerSocket *udpsk = new lzz_ServerSocket();
-				char data[16 + 4];
-				lzz_Memcpy(data, &model->Id, 16);
-				lzz_Memcpy(&data[16], &model->Len, 4);
-				udpsk->UdpSend(data, 20, ActionType::PushMsg, uModel->getAddr());
-				lzz_Delete(udpsk);
+				y_waitMsgList.push_front(model);
 			}
 		}
 	}
-	if(model != lzz_nullptr)
+	if (model != lzz_nullptr)
 	{
 		lzz_NewGuid(&model->Id);
 		lzz_Memcpy(&model->SendUserId, &request[1], 16);
-		lzz_Memcpy(&model->RecvUserId, &request[1+16], 16);
+		lzz_Memcpy(&model->RecvUserId, &request[1 + 16], 16);
 		lzz_Memcpy(&model->Len, &request[1 + 16 + 16], 16);
-		lzz_Memcpy(&model->data, &request[1 + 16 + 16+4], model->Len);
+		lzz_Memcpy(&model->data, &request[1 + 16 + 16 + 4], model->Len);
 		model->CreateTime = time(0);
 		lzz_UserModle* uModel = cl->GetClient(model->RecvUserId);
-		if(uModel != lzz_nullptr)
+		if (uModel != lzz_nullptr)
 		{
-			lzz_ServerSocket *udpsk = new lzz_ServerSocket();
-			udpsk->UdpSend(&model->Id, 16, ActionType::PushMsg, uModel->getAddr());
-			lzz_Delete(udpsk);
+			char dt[20];
+			lzz_Memcpy(dt, &model->Len, 4);
+			lzz_Memcpy(&dt[4], &model->Id, 16);
+			udpsk->UdpSend(dt, 20, ActionType::PushMsg, uModel->getAddr());
 		}
 		sk->TcpSend(new char{ 1 }, 1, this, 3);
 	}
@@ -74,14 +79,23 @@ void lzz_PushMsg::Send()
 	for (msgE i = y_msgList.begin(); i != y_msgList.end(); i++)
 	{
 		model = *i;
-		if (model->isUse && model->Id == id)
+		if (!model->isUse && model->Id == id)
 		{
 			y_SendMsgModel = model;
-			respone = new char[model->Len + 4];
-			lzz_Memcpy(respone, &model->Len, 4);
-			lzz_Memcpy(&respone[4],model->data, model->Len);
-			sk->TcpSend(request, model->Len + 4,this,1);
+			respone = new char[model->Len];
+			lzz_Memcpy(respone, model->data, model->Len);
+			sk->TcpSend(respone, model->Len, this, 1);
+			break;
 		}
+	}
+}
+void lzz_PushMsg::init(lzz_SocketInterface* _sk, lzz_ClientList* _cl, char* reqest, SOCKADDR* address)
+{
+	lzz_Factory::init(_sk, _cl, reqest, address);
+	if (y_Notice == lzz_nullptr)
+	{
+		y_Notice = new lzz_MsgSendNotice(_cl);
+		y_Notice->Start();
 	}
 }
 
@@ -96,6 +110,7 @@ void lzz_PushMsg::backFunction(int actionType)
 		}
 		else
 		{
+			lzz_Delete(respone);
 			sk->TcpRecv(y_SendMsgBackCode, 1, this, 2);
 		}
 		break;
@@ -104,11 +119,10 @@ void lzz_PushMsg::backFunction(int actionType)
 		{
 			lzz_ZeroMemory(y_SendMsgModel, sizeof(lzz_MsgModel));
 			y_SendMsgModel->isUse = true;
-			CloseHandle((HANDLE)sk->y_pHaandle->socket);
 		}
 		break;
 	case 3:
-		lzz_Delete(sk->y_pIo->factory);
+		//lzz_Delete(sk->y_pIo->factory);
 		break;
 	}
 }
@@ -125,4 +139,40 @@ void lzz_PushMsg::onLoad()
 			Send();
 			break;
 	}
+}
+
+lzz_MsgSendNotice::lzz_MsgSendNotice(lzz_ClientList* _cl)
+{
+	cl = _cl;
+}
+lzz_MsgSendNotice::~lzz_MsgSendNotice()
+{
+	
+}
+
+
+void lzz_MsgSendNotice::run()
+{
+	bool run = true;
+	lzz_ServerSocket *udpsk = new lzz_ServerSocket();
+	udpsk->UdpBind(8025);
+	char data[20];
+	while(run)
+	{
+		if (lzz_PushMsg::y_waitMsgList.empty())continue;
+		lzz_MsgModel* model = lzz_PushMsg::y_waitMsgList.front();
+		if (!model->isUse) {
+			lzz_UserModle* uModel = cl->GetClient(model->RecvUserId);
+			if (uModel != lzz_nullptr)
+			{
+				lzz_Memcpy(data, &model->Len, 4);
+				lzz_Memcpy(&data[4], &model->Id, 16);
+				udpsk->UdpSend(data, 20, ActionType::PushMsg, uModel->getAddr());
+			}
+		}else
+		{
+			lzz_PushMsg::y_waitMsgList.remove(model);
+		}
+	}
+	lzz_Delete(udpsk);
 }

@@ -8,19 +8,9 @@
 #include "lzz_Push.h"
 #include "lzz_PushMsg.h"
 
-
-
-
-
-
-
-
-
-
 class lzz_TcpRecv : public lzz_Thread
 {
     public:
-        lzz_TcpRecv(lzz_SocketInterface *s);
         lzz_TcpRecv(lzz_SocketInterface *s,lzz_ClientList *_cl);
         virtual ~lzz_TcpRecv();
         /** @brief (one liner)
@@ -28,7 +18,6 @@ class lzz_TcpRecv : public lzz_Thread
           * 开线程运行的函数
           */
         void run() override;
-		lzz_TcpRecvAction* getAction();
 		//工作者函数
 		static DWORD WINAPI ServerWorkThread(LPVOID CompletionPortID);
     private:

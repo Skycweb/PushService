@@ -1,5 +1,8 @@
 #include "base.h"
 
+GUID lzz_UserId;
+
+
 void lzz_STR_2_GUID(wchar_t* buf, GUID* guid)
 {
 

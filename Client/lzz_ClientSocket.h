@@ -1,8 +1,6 @@
 #pragma once
 #include "../include/lzz_SocketInterface.h"
 
-#pragma comment(lib,"ws2_32.lib")
-
 
 
 
@@ -16,7 +14,6 @@ private:
 	GUID my_guid_ID = {0};
 public:
 	lzz_ClientSocket();
-	lzz_ClientSocket(GUID);
 	//绑定端口
 	bool TcpConnect(int port, char *pIp);
 	//发送信息

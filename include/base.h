@@ -16,14 +16,16 @@
 #include <list>
 //#define lzzgcc // gcc开关
 //#define waiwang
+
+
 //全局UserId
-GUID lzz_UserId;
+extern GUID lzz_UserId;
 
 #ifndef lzz_ServiceTcpIp
 #ifdef  waiwang
 #define lzz_ServiceTcpIp  "120.76.96.128"
 #else
-#define lzz_ServiceTcpIp  "192.168.2.102"
+#define lzz_ServiceTcpIp  "192.168.0.168"
 #endif
 #endif
 
@@ -130,7 +132,6 @@ namespace _ActionType {
 	{
 		None = 0,
 		Heartbeat = 1,
-		PushAction = 2 //推送
 		PushAction = 2, //推送
 		PushMsg = 3 //聊天专用
 	};

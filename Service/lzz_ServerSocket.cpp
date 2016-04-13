@@ -57,7 +57,11 @@ bool lzz_ServerSocket::TcpSend(void* pData,int len)
 	if(y_pHaandle != lzz_nullptr)
 	{
 		lzz_Memcpy(y_pIo->buffer, pData, len);
-		return WSASend(sk, &y_pIo->databuff, 1, &y_pIo->bytesSend, 0, &y_pIo->overlapped, lzz_nullptr) == WSA_IO_PENDING;
+		DWORD dwFlags = 0;
+		DWORD lpNumberOfBytesSent = 0;
+		y_pIo->databuff.buf = (char*)pData;
+		y_pIo->databuff.len = len;
+		return WSASend(sk, &y_pIo->databuff, 1, &lpNumberOfBytesSent, dwFlags, &y_pIo->overlapped, lzz_nullptr) == WSA_IO_PENDING;
 	}
 	else
 	{
@@ -69,11 +73,13 @@ bool lzz_ServerSocket::TcpSend(void* pData,int len)
 
 bool lzz_ServerSocket::TcpRecv(void* pData, int len, lzz_Factory * f, int ActionType)
 {
+	lzz_ZeroMemory(y_pIo,sizeof(lzz_PER_IO_OPERATEION_DATA));
 	y_pIo->databuff.buf = (char*)pData;
 	y_pIo->databuff.len = len;
 	y_pIo->factory = f;
-	y_pIo->ActionType;
-	return WSARecv(sk, &y_pIo->databuff, 1, &y_pIo->bytesSend, 0, &y_pIo->overlapped, lzz_nullptr) == WSA_IO_PENDING;
+	y_pIo->ActionType = ActionType;
+	DWORD lpFlags = 0;
+	return WSARecv(sk, &y_pIo->databuff, 1, &y_pIo->bytesSend, &lpFlags, &y_pIo->overlapped, lzz_nullptr) == WSA_IO_PENDING;
 }
 
 bool lzz_ServerSocket::TcpSend(void* pData, int len, lzz_Factory* f, int ActionType)
@@ -124,7 +130,8 @@ void lzz_ServerSocket::UdpSend(void* pData, int len, ActionType at, SOCKADDR* pA
 	lzz_Memcpy(&(s[0]), &at, 4);
 	lzz_Memcpy(&(s[4]), &len, 4);
 	lzz_Memcpy(&(s[8]), pData, len);
-	sendto(sk, s, len + 8, 0, pAddress, sizeof(SOCKADDR));
+	if (sendto(sk, s, len + 8, 0, pAddress, sizeof(SOCKADDR)) == SOCKET_ERROR)
+		throw 1;
 	lzz_Deletes(s);
 }
 
