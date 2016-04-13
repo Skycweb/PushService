@@ -9,6 +9,8 @@
 #include <iostream>
 #include <objbase.h>
 #include <process.h>
+
+
 #include <string>
 #include <ctime>
 #include <list>
@@ -120,12 +122,15 @@ GUID lzz_UserId;
 void lzz_STR_2_GUID(wchar_t* cstr, GUID *stGuid);
 std::string lzz_GuidToString(const GUID &guid);
 
+
+
 namespace _ActionType {
 	//访问类型
 	enum ActionType_
 	{
 		None = 0,
 		Heartbeat = 1,
+		PushAction = 2 //推送
 		PushAction = 2, //推送
 		PushMsg = 3 //聊天专用
 	};

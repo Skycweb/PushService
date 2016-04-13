@@ -1,6 +1,7 @@
 #pragma once
 #define _IOCP_
 #include "../include/base.h"
+#define _IOCP_
 #include "../include/lzz_SocketInterface.h"
 
 class lzz_ServerSocket:public lzz_SocketInterface

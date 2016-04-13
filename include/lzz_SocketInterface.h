@@ -1,6 +1,8 @@
+#pragma once
 #ifndef  _lzz_SocketInterface_
 #define  _lzz_SocketInterface_
 #include "base.h"
+#define _IOCP_
 #include "lzz_Factory.h"
 
 #define DataBuffSize 1024

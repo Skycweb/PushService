@@ -1,5 +1,7 @@
 #include "lzz_TcpRecv.h"
+#include "lzz_TcpRecvAction.h"
 
+lzz_TcpRecv::lzz_TcpRecv(lzz_SocketInterface* s)
 
 lzz_ClientList* lzz_TcpRecv::cl = lzz_nullptr;
 
@@ -7,18 +9,21 @@ lzz_ClientList* lzz_TcpRecv::cl = lzz_nullptr;
 lzz_TcpRecv::lzz_TcpRecv(lzz_SocketInterface* s, lzz_ClientList* _cl)
 {
 	sk = s;
+
 	if (cl != lzz_nullptr)
 		cl = _cl;
 }
 
 lzz_TcpRecv::~lzz_TcpRecv()
 {
+	*isRun = false;
 	if(isRun != lzz_nullptr)
 		*isRun = false;
 }
 
 void lzz_TcpRecv::run()
 {
+//	lzz_out << "进入等待接入" << lzz_endline;
 	//	lzz_out << "进入等待接入" << lzz_endline;
 	bool _Run = true;
 	isRun = &_Run;
@@ -54,6 +59,11 @@ void lzz_TcpRecv::run()
 		sk->Accept(&_socket, &address);
 		if (_socket == INVALID_SOCKET)
 			break;
+//		lzz_out << "收到一个连接接入" << lzz_endline;
+		lzz_TcpRecvAction* a = getAction();
+		if (a != lzz_nullptr) {
+			a->SetSKOCKET(&_socket);
+			a->Start();
 		lzz_LPPER_HANDLE_DATA socket = new lzz_PER_HANDLE_DATA;
 		socket->socket = _socket;
 		lzz_LPPER_IO_OPERATION_DATA pIoData = new lzz_PER_IO_OPERATEION_DATA;
@@ -81,8 +91,13 @@ void lzz_TcpRecv::run()
 	isRun = lzz_nullptr;
 }
 
+lzz_TcpRecvAction* lzz_TcpRecv::getAction()
 DWORD lzz_TcpRecv::ServerWorkThread(LPVOID CompletionPortID)
 {
+	int len = 0;
+	lzz_ARRAY_LEN(tcpAction, len);
+	for (int i = 0; i < len;i++)
+
 	GUID id;
 	lzz_NewGuid(&id);
 	HANDLE complationPort = (HANDLE)CompletionPortID;
@@ -95,11 +110,17 @@ DWORD lzz_TcpRecv::ServerWorkThread(LPVOID CompletionPortID)
 
 	while (1)
 	{
+		if (tcpAction[i].isOk)
 		if (GetQueuedCompletionStatus(complationPort, &bytesTransferred, (PULONG_PTR)&pHandleData, (LPOVERLAPPED *)&pIoData, INFINITE) == 0)
+
 		{
+			tcpAction[i].isOk = false;
+			return &(tcpAction[i]);
 			std::cout << "GetQueuedCompletionStatus failed. Error:" << GetLastError() << std::endl;
 			return 0;
 		}
+		if (i == len-1)
+			i = 0;
 		lzz_out << "工作者:" << lzz_GuidToString(id) << lzz_endline;
 		// 检查数据是否已经传输完了
 		if (bytesTransferred == 0)
@@ -204,4 +225,5 @@ DWORD lzz_TcpRecv::ServerWorkThread(LPVOID CompletionPortID)
 		//			}
 		//		}
 	}
+	return lzz_nullptr;
 }
